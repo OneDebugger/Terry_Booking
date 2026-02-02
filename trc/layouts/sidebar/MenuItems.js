@@ -5,6 +5,16 @@ const Menuitems = [
     href: "/admin",
   },
   {
+    title: "Room Classes",
+    icon: "building",
+    href: "/admin/roomclasses",
+  },
+  {
+    title: "Room Instances",
+    icon: "door-open",
+    href: "/admin/roominstances",
+  },
+  {
     title: "Add Product",
     icon: "plus-circle",
     href: "/admin/addproduct",

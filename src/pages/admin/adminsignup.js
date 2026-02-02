@@ -45,7 +45,7 @@ setnPassword(e.target.value)
     setLoading(true)
     e.preventDefault();
     try{
-        const data ={name,email,password};
+        const data ={name,email,password,npassword};
         if(password==npassword){
     const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/adminsignup`, {
       method: "POST", // or 'PUT'

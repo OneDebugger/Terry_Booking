@@ -2,7 +2,6 @@ import Image from 'next/image'
 import Head from 'next/head'
 import Hero from './components/Hero1'
 import Sliderhome from './components/Sliderhome'
-import Checkavl from './components/Checkavl'
 import Room from './components/room'
 import Features from './components/Features'
 import Ourgallery from './components/Ourgallery'
@@ -37,7 +36,6 @@ export default function Home({catroom,catfood,slider,gallery}) {
       <div className='h-2 w-40 bg-amber-500 rounded'></div>
     </div>
     <Sliderhome slider={slider}/>
-    <Checkavl/>
     <div className='text-amber-500  h-16 flex justify-center items-center my-2'>
       <h1 className='sm:text-4xl text-xl font-bold'>Our Rooms</h1>
      

@@ -13,7 +13,7 @@ const Footer = () => {
   	 			<h4>Hotel Cresent</h4>
   	 			<ul>
   	 				<p className='text-white'>Address:-H.No Plot Bearing No 37 Prestige Country block No 22 of Rallaguda Village Shamshabad Hyderabad 501218</p>
-  	 				<li className='flex flex-row items-center text-amber-500 my-2'><a className=''><BsFillTelephoneFill className='text-amber-500'/></a><p className='mx-2'>+919666252227
+  	 				<li className='flex flex-row items-center text-amber-500 my-2'><a className=''><BsFillTelephoneFill className='text-amber-500'/></a><p className='mx-2'>+2633712345678
              </p> </li>
   	 				<li className='flex flex-row items-center text-amber-500 my-2'><a className=''><MdEmail className='text-amber-500'/></a><p className='mx-2'>hoteldcrescent@gmail.com
              </p> </li>
@@ -35,9 +35,7 @@ const Footer = () => {
   	 			<h4>Online shop</h4>
   	 			<ul>
   	 				<li><Link href={"/foods"}>Foods</Link></li>
-  	 				<li><Link href={"/contactus"}>Book a room</Link></li>
-  	 				<li><Link href={"/contactus"}>Book a table</Link></li>
-  	 				<li><Link href={"/contactus"}>Book a hall</Link></li>
+  	 				<li><Link href={"/booking"}>Book a room</Link></li>
   	 			</ul>
   	 		</div>
   	 		<div className="footer-col">
@@ -48,7 +46,7 @@ const Footer = () => {
   	 				<a href="#"><BsTwitter className='text-4xl hover:text-blue-600'/></a>
   	 				<a href="#"><BsYoutube className='text-4xl hover:text-red-600'/></a>
   	 			</div>
-          <a href='https://wa.me/9666252227?text=I%20need%20some%20help' target='_blank'><Image src={'/wp.png'} alt='img' height={300} width={300}/></a>
+          <a href='https://wa.me/2633712345678?text=I%20need%20some%20help' target='_blank'><Image src={'/wp.png'} alt='img' height={300} width={300}/></a>
   	 		</div>
   	 	</div>
   	 </div>

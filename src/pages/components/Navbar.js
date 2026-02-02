@@ -186,6 +186,12 @@ const Navbar = ({
                 Home
               </li>
             </Link>
+            <Link href={"/booking"}>
+              {" "}
+              <li className="text-lg my-2 font-semibold hover:bg-gray-800 hover:rounded transition duration-150 ease-out hover:ease-in text-white ">
+                Booking
+              </li>
+            </Link>
             <Link href={"/rooms"}>
               {" "}
               <li className="text-lg my-2 font-semibold hover:bg-gray-800 hover:rounded transition duration-150 ease-out hover:ease-in text-white ">
@@ -412,6 +418,12 @@ const Navbar = ({
               {" "}
               <li className="text-lg my-2 font-semibold hover:bg-amber-100 hover:rounded transition duration-150 ease-out hover:ease-in text-white">
                 Home
+              </li>
+            </Link>
+            <Link href={"/booking"}>
+              {" "}
+              <li className="text-lg my-2 font-semibold hover:bg-amber-100 hover:rounded transition duration-150 ease-out hover:ease-in text-white lg:hidden">
+                Booking
               </li>
             </Link>
             <Link href={"/rooms"}>
