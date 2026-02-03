@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material";
 import BlogCard from "../../../trc/components/dashboard/BlogCard";
-import SalesOverview from "../../../trc/components/dashboard/SalesOverview";
+import BookingsOverview from "../../../trc/components/dashboard/BookingsOverview";
 import DailyActivity from "../../../trc/components/dashboard/DailyActivity";
 import ProductPerfomance from "../../../trc/components/dashboard/ProductPerfomance";
 import { ThemeProvider } from "@mui/material/styles";
@@ -38,7 +38,7 @@ export default function Index() {
         <FullLayout>
     <Grid container spacing={0}>
       <Grid item xs={12} lg={12}>
-        <SalesOverview />
+        <BookingsOverview />
       </Grid>
       {/* ------------------------- row 1 ------------------------- */}
       <Grid item xs={12} lg={4}>

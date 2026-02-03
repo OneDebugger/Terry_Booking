@@ -45,7 +45,7 @@ const Hero1 = () => {
                 Book your dream hotel and enjoy delicious food delivered right
               </p>
                <div className="flex flex-row items-center justify-center lg:justify-start md:justify-start sm:justify-start xl:justify-start flex-wrap">
-              <Link href={"/Signup"}>
+              <Link href={"/booking"}>
               <motion.button
                  whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}

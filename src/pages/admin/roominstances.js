@@ -1,4 +1,3 @@
-git add .
 import React, { useEffect, useState } from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../../trc/theme/theme";

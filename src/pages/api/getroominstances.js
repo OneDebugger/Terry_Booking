@@ -1,6 +1,7 @@
 import connectDb from "../middleware/mongoose";
 import RoomInstance from "../../../models/RoomInstance";
 import RoomClass from "../../../models/RoomClass";
+import Order from "../../../models/Order";
 import { checkAdminAuth } from "./utils/auth";
 
 export default async function handler(req, res) {
@@ -39,7 +40,6 @@ export default async function handler(req, res) {
 
     // Get booking status for each room instance
     for (const roomInstance of roomInstances) {
-      const Order = require("../../models/Order");
       const activeBooking = await Order.findOne({
         roomInstance: roomInstance._id,
         deliveryStatus: { $in: ['pending', 'confirmed', 'room allocated', 'checked in'] }
