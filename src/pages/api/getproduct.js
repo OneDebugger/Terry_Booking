@@ -1,13 +1,3 @@
-import connectDb from "../middleware/mongoose";
-import Product from "../../../models/Product";
-const handler = async (req, res) => {
-  if(req.method=="GET"){
-    let product= await Product.find();
-    res.status(200).json(product);
-  }
-  else{
-    res.status(400).json({error:"some thing went wrong"})
-  }
-    
-  }
-export default connectDb(handler)
+// This API endpoint has been removed as part of the food/restaurant functionality cleanup.
+// The getproduct endpoint was used to fetch food items which are no longer part of the application.
+// Room booking functionality uses different endpoints for room classes and availability.

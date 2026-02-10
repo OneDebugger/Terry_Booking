@@ -15,16 +15,6 @@ const Menuitems = [
     href: "/admin/roominstances",
   },
   {
-    title: "Add Product",
-    icon: "plus-circle",
-    href: "/admin/addproduct",
-  },
-  {
-    title: "View all product",
-    icon: "eye",
-    href: "/admin/viewproducts",
-  },
-  {
     title: "Slider Images",
     icon: "image",
     href: "/admin/sliderimage",
@@ -50,7 +40,7 @@ const Menuitems = [
     href: "/admin/galleryimage",
   },
   {
-    title: "Serach a Order/Bookings",
+    title: "Search a Booking",
     icon: "search",
     href: "/admin/searchorder",
   },

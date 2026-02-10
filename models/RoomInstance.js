@@ -144,4 +144,4 @@ RoomInstanceSchema.methods.putUnderMaintenance = async function(notes = '') {
 };
 
 mongoose.models = {};
-module.exports = mongoose.model('RoomInstance', RoomInstanceSchema);
+module.exports = mongoose.model('RoomInstance', RoomInstanceSchema, 'roominstances');

@@ -452,42 +452,8 @@ const RoomInstances = () => {
                           )}
                         </div>
                       </td>
-                      <td className="px-6 py-4 space-y-2">
-                        {/* Status Management Buttons */}
-                        <div className="flex flex-col space-y-1">
-                          <button
-                            onClick={() => updateStatus(roomInstance._id, 'available')}
-                            className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded hover:bg-green-200"
-                          >
-                            Available
-                          </button>
-                          <button
-                            onClick={() => updateStatus(roomInstance._id, 'clean')}
-                            className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded hover:bg-blue-200"
-                          >
-                            Clean
-                          </button>
-                          <button
-                            onClick={() => updateStatus(roomInstance._id, 'dirty')}
-                            className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded hover:bg-yellow-200"
-                          >
-                            Dirty
-                          </button>
-                          <button
-                            onClick={() => updateStatus(roomInstance._id, 'maintenance')}
-                            className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded hover:bg-orange-200"
-                          >
-                            Maintenance
-                          </button>
-                          <button
-                            onClick={() => updateStatus(roomInstance._id, 'out_of_order')}
-                            className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded hover:bg-gray-200"
-                          >
-                            Out of Order
-                          </button>
-                        </div>
-                        
-                        <div className="flex space-x-2 mt-2">
+                      <td className="px-6 py-4">
+                        <div className="flex space-x-4">
                           <button
                             onClick={() => openModal(roomInstance)}
                             className="text-blue-600 hover:text-blue-900 font-medium text-sm"

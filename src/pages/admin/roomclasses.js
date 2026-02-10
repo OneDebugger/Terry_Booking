@@ -34,7 +34,6 @@ const RoomClasses = () => {
     roomSize: '',
     view: '',
     images: [],
-    totalInventory: 1,
     minStay: 1,
     maxStay: 30,
     checkInTime: '14:00',
@@ -163,7 +162,6 @@ const RoomClasses = () => {
         roomSize: roomClass.roomSize,
         view: roomClass.view,
         images: roomClass.images || [],
-        totalInventory: roomClass.totalInventory,
         minStay: roomClass.minStay,
         maxStay: roomClass.maxStay,
         checkInTime: roomClass.checkInTime,
@@ -188,7 +186,6 @@ const RoomClasses = () => {
         roomSize: '',
         view: '',
         images: [],
-        totalInventory: 1,
         minStay: 1,
         maxStay: 30,
         checkInTime: '14:00',
@@ -389,7 +386,6 @@ const RoomClasses = () => {
                     <th className="px-6 py-3">Category</th>
                     <th className="px-6 py-3">Capacity</th>
                     <th className="px-6 py-3">Price</th>
-                    <th className="px-6 py-3">Inventory</th>
                     <th className="px-6 py-3">Status</th>
                     <th className="px-6 py-3">Actions</th>
                   </tr>
@@ -429,11 +425,6 @@ const RoomClasses = () => {
                             ₹{roomClass.mrp}
                           </div>
                         )}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="px-2 py-1 text-xs bg-green-100 text-green-800 rounded">
-                          {roomClass.totalInventory} rooms
-                        </span>
                       </td>
                       <td className="px-6 py-4">
                         <span className={`px-2 py-1 text-xs rounded ${
@@ -582,17 +573,6 @@ const RoomClasses = () => {
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Total Inventory</label>
-                      <input
-                        type="number"
-                        name="totalInventory"
-                        value={formData.totalInventory}
-                        onChange={handleInputChange}
-                        min="1"
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      />
-                    </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
@@ -649,28 +629,6 @@ const RoomClasses = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Check-in Time</label>
-                      <input
-                        type="time"
-                        name="checkInTime"
-                        value={formData.checkInTime}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Check-out Time</label>
-                      <input
-                        type="time"
-                        name="checkOutTime"
-                        value={formData.checkOutTime}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      />
-                    </div>
-                  </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Amenities (comma-separated)</label>

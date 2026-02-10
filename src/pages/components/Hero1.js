@@ -71,30 +71,6 @@ const Hero1 = () => {
               </motion.button>
                 
               </Link>
-              <Link href={"/Event"}>
-              <motion.button
-                 whileHover={{ scale: 1.1 }}
-                 whileTap={{ scale: 0.9 }}
-                className="inline-flex items-center px-6 py-4 mt-8 font-semibold text-white transition-all duration-200 bg-yellow-600 rounded-full lg:mt-16 hover:bg-purple-800 w-52 sm:w-auto md:w-auto lg:w-auto xl:w-auto mx-4"
-                role="button"
-              >
-                Order Food
-                <svg
-                  className="w-6 h-6 ml-8 -mr-2"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                    d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </motion.button>
-              </Link>
               </div>
             </motion.div>
 

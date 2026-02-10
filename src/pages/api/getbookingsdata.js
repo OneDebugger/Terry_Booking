@@ -1,5 +1,5 @@
 import connectDb from "../middleware/mongoose";
-import Order from "../../../models/Order";
+import Booking from "../../../models/Booking";
 
 const handler = async (req, res) => {
   // Get current year for dynamic date ranges
@@ -26,20 +26,20 @@ const handler = async (req, res) => {
     
     for (const range of dateRanges) {
       // Get bookings by checkin date (actual booking date)
-      const bookings = await Order.find({
-        checkin: { $gte: range.start, $lt: range.end }
+      const bookings = await Booking.find({
+        checkinDate: { $gte: range.start, $lt: range.end }
       });
       
       // Get confirmed bookings
-      const confirmedBookings = await Order.find({
-        checkin: { $gte: range.start, $lt: range.end },
-        deliveryStatus: { $in: ['confirmed', 'room allocated', 'checked in'] }
+      const confirmedBookings = await Booking.find({
+        checkinDate: { $gte: range.start, $lt: range.end },
+        bookingStatus: { $in: ['confirmed', 'checked-in'] }
       });
       
       // Get checked-in bookings
-      const checkedInBookings = await Order.find({
-        checkin: { $gte: range.start, $lt: range.end },
-        deliveryStatus: 'checked in'
+      const checkedInBookings = await Booking.find({
+        checkinDate: { $gte: range.start, $lt: range.end },
+        bookingStatus: 'checked-in'
       });
 
       bookingsData[range.month] = {

@@ -60,23 +60,30 @@ const handler = async (req, res) => {
 // instance.orders.create(options, async function(err, order) {
 //   res.status(200).json({order,success:true});
 try{
-  let ordersd=new Order({
-    name:req.body.name,
-    email:req.body.email,
-    orderID:rand,
-    products:req.body.cart,
-    address:req.body.address,
-    pincode:req.body.pincode,
-    city:req.body.city,
-    state:req.body.state,
-    phone:req.body.phone,
-    checkin:req.body.checkin,
-    checkout:req.body.checkout,
-    amount:req.body.subTotal
-  })
-  await ordersd.save();
-  console.log(ordersd)
-  res.status(200).json(ordersd)
+  // Create order object but DON'T save to database yet
+  const orderData = {
+    name: req.body.name,
+    email: req.body.email,
+    orderID: rand,
+    products: req.body.cart,
+    address: req.body.address,
+    pincode: req.body.pincode,
+    city: req.body.city,
+    state: req.body.state,
+    phone: req.body.phone,
+    checkin: req.body.checkin,
+    checkout: req.body.checkout,
+    amount: req.body.subTotal,
+    paymentStatus: 'pending',
+    orderStatus: 'created'
+  };
+  
+  // Return order data for payment processing
+  res.status(200).json({
+    success: true,
+    order: orderData,
+    message: "Order created successfully, proceed to payment"
+  });
 }
 // })}
   

@@ -7,106 +7,124 @@ import Head from 'next/head';
 const Booking = () => {
    const [checkin, setCheckin] = useState("");
    const [checkout, setCheckout] = useState("");
-   const [adults, setAdults] = useState("");
-   const [child, setChild] = useState("");
-   const [room, setRoom] = useState("");
-   const [product, setProduct] = useState("");
+   const [adults, setAdults] = useState("1");
+   const [child, setChild] = useState("0");
+   const [roomCount, setRoomCount] = useState("");
+   const [email, setEmail] = useState("");
+   const [phone, setPhone] = useState("");
+   const [name, setName] = useState("");
+   const [roomClasses, setRoomClasses] = useState([]);
+   const [loading, setLoading] = useState(false);
    const router = useRouter();
    
    useEffect(() => {
-      fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getproduct`)
+      fetch(`${process.env.NEXT_PUBLIC_HOST}/api/public/getroomclasses`)
+      .then((data) => data.json())
       .then((data) => {
-        return data.json();
+        if (data.success) {
+          setRoomClasses(data.data || []);
+        } else {
+          toast.error("Failed to load room options.");
+        }
       })
-      .then((data) => {
-        setProduct(data);
+      .catch((error) => {
+        console.error('❌ Error loading room classes:', error);
       });
    }, [])
 
    const handlechange = (e) => {
-      if(e.target.name == "checkin"){
-         setCheckin(e.target.value)
-      }
-      else if(e.target.name == "checkout"){
-         setCheckout(e.target.value)
-      }
-      else if(e.target.name == "adults"){
-         setAdults(e.target.value)
-      }
-      else if(e.target.name == "child"){
-         setChild(e.target.value)
-      }
-      else if(e.target.name == "room"){
-         setRoom(e.target.value)
-      }
+      const { name, value } = e.target;
+      if (name === "checkin") setCheckin(value);
+      else if (name === "checkout") setCheckout(value);
+      else if (name === "adults") setAdults(value);
+      else if (name === "child") setChild(value);
+      else if (name === "email") setEmail(value);
+      else if (name === "phone") setPhone(value);
+      else if (name === "name") setName(value);
    }
-   
-   let qty = 0;
-   const handlebutton = () => {
-      if(room != "" && child != "" && checkin != ""){
-         product.map((item) => {
-            qty = qty + item.availableQty;
-         })
-         if(qty > 0){
-            toast.success("Congratulations! Rooms are available. You are being redirected to the booking page for further details.", {
-               position: "top-left",
-               autoClose: 3000,
-               hideProgressBar: false,
-               closeOnClick: true,
-               pauseOnHover: true,
-               draggable: true,
-               progress: undefined,
-               theme: "light",
-            });
-            router.push("/rooms")
-         }
-         else{
-            toast.error("Some rooms are out of stock. Please check the booking page for further details!", {
-               position: "top-left",
-               autoClose: 1000,
-               hideProgressBar: false,
-               closeOnClick: true,
-               pauseOnHover: true,
-               draggable: true,
-               progress: undefined,
-               theme: "light",
-            });
-         }
+
+   // --- RESTORED HANDLEBUTTON FUNCTION ---
+   const handlebutton = async () => {
+      // 1. Validation
+      if (!checkin || !checkout || !roomCount) {
+         toast.error("Please fill in all required fields (Check-in, Check-out, and Rooms).");
+         return;
       }
-      else{
-         toast.error("Please fill up the required details for booking", {
-            position: "top-left",
-            autoClose: 1000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-         });
+
+      const checkinDate = new Date(checkin);
+      const checkoutDate = new Date(checkout);
+      if (checkoutDate <= checkinDate) {
+         toast.error("Check-out date must be after check-in date.");
+         return;
       }
-   }
+
+      setLoading(true);
       
-  return (
+      try {
+         let bestAvailability = null;
+         let bestRoomClass = null;
+         
+         // Loop through classes to find the first one with space
+         for (const roomClass of roomClasses) {
+           const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/public/checkroomavailability`, {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify({
+               checkin,
+               checkout,
+               roomClassId: roomClass._id,
+               roomCount: parseInt(roomCount)
+             })
+           });
+
+           const result = await response.json();
+           
+           if (response.ok && result.success && result.availableCount >= parseInt(roomCount)) {
+             bestAvailability = result;
+             bestRoomClass = roomClass;
+             break; 
+           }
+         }
+
+         // Check if any room classes have availability
+         const hasAvailability = roomClasses.some(roomClass => {
+           const availability = bestAvailability && bestRoomClass._id === roomClass._id;
+           return availability;
+         });
+
+         if (hasAvailability) {
+           toast.success("Checking room class availability...");
+           router.push({
+             pathname: '/roomclassselection',
+             query: {
+               checkin: checkin,
+               checkout: checkout,
+               adults: adults,
+               child: child,
+               email: email,
+               phone: phone,
+               name: name,
+               roomCount: roomCount
+             }
+           });
+         } else {
+           toast.error("No rooms available for these dates.");
+         }
+      } catch (error) {
+         console.error(error);
+         toast.error("Network error. Please try again.");
+      } finally {
+         setLoading(false);
+      }
+   }; 
+
+   return (
     <div className='bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-slate-900 via-purple-900 to-slate-900 min-h-screen'>
       <Head>
-        <title>Room Booking | Hotel DCrescent - Reserve Your Stay</title>
-        <meta name="description" content="Book your perfect room at Hotel DCrescent. Check availability, select your dates, and reserve your stay with our easy online booking system. Enjoy comfortable accommodations and exceptional service."/>
-        <meta name="keywords" content="hotel booking, room reservation, check availability, book rooms, hotel DCrescent, accommodation booking, online booking, room availability" />
+        <title>Room Booking | Hotel DCrescent</title>
       </Head>
       
-      <ToastContainer
-        position="top-left"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+      <ToastContainer position="top-left" autoClose={5000} theme="light" />
 
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-8">
@@ -119,98 +137,66 @@ const Booking = () => {
           <form className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">Check-in Date *</label>
-              <input 
-                type="date" 
-                name="checkin" 
-                className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                onChange={handlechange} 
-                value={checkin}
-              />
+              <label className="block text-sm font-semibold text-gray-700">Check-in *</label>
+              <input type="date" name="checkin" className="w-full p-3 border rounded-md" onChange={handlechange} value={checkin} />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">Check-out Date *</label>
-              <input 
-                type="date" 
-                name="checkout" 
-                className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                onChange={handlechange} 
-                value={checkout} 
-              />
+              <label className="block text-sm font-semibold text-gray-700">Check-out *</label>
+              <input type="date" name="checkout" className="w-full p-3 border rounded-md" onChange={handlechange} value={checkout} />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">Adults *</label>
-              <select 
-                name="adults" 
-                className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                onChange={handlechange} 
-                value={adults}
-              >
-                <option value="1">No adults</option>
-                <option value="1">1 adult</option>
-                <option value="2">2 adults</option>
-                <option value="3">3 adults</option>
-                <option value="4">4 adults</option>
-                <option value="5">5 adults</option>
-                <option value="6">6 adults</option>
+              <label className="block text-sm font-semibold text-gray-700">Adults</label>
+              <select name="adults" className="w-full p-3 border rounded-md" onChange={handlechange} value={adults}>
+                {[1,2,3,4,5,6].map(n => <option key={n} value={n}>{n} adult{n!==1&&'s'}</option>)}
               </select>
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">Children *</label>
-              <select 
-                name="child" 
-                className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                onChange={handlechange} 
-                value={child}
-              >
-                <option value="1">No children</option>
-                <option value="2">1 child</option>
-                <option value="3">2 children</option>
-                <option value="4">3 children</option>
-                <option value="5">4 children</option>
-                <option value="6">5 children</option>
-                <option value="7">6 children</option>
+              <label className="block text-sm font-semibold text-gray-700">Children</label>
+              <select name="child" className="w-full p-3 border rounded-md" onChange={handlechange} value={child}>
+                {[0,1,2,3,4,5,6].map(n => <option key={n} value={n}>{n} child{n!==1&&'ren'}</option>)}
               </select>
             </div>
 
             <div className="space-y-2">
               <label className="block text-sm font-semibold text-gray-700">Rooms *</label>
-              <select 
-                name="room" 
-                className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                onChange={handlechange} 
-                value={room}
-              >
-                <option value="1">1 room</option>
-                <option value="2">2 rooms</option>
-                <option value="3">3 rooms</option>
-                <option value="4">4 rooms</option>
-                <option value="5">5 rooms</option>
-                <option value="6">6 rooms</option>
+              <select name="roomCount" className="w-full p-3 border rounded-md" onChange={(e) => setRoomCount(e.target.value)} value={roomCount}>
+                <option value="">Select</option>
+                {[1,2,3,4,5,6].map(n => <option key={n} value={n}>{n} room{n!==1&&'s'}</option>)}
               </select>
+            </div>
+
+            <div className="space-y-2 col-span-1 md:col-span-2">
+              <label className="block text-sm font-semibold text-gray-700">Full Name *</label>
+              <input type="text" name="name" placeholder="Your full name" className="w-full p-3 border rounded-md" onChange={handlechange} value={name} required />
+            </div>
+
+            <div className="space-y-2 col-span-1 md:col-span-2">
+              <label className="block text-sm font-semibold text-gray-700">Email Address</label>
+              <input type="email" name="email" placeholder="your@email.com" className="w-full p-3 border rounded-md" onChange={handlechange} value={email} />
+            </div>
+
+            <div className="space-y-2 col-span-1 md:col-span-2">
+              <label className="block text-sm font-semibold text-gray-700">Phone Number</label>
+              <input type="tel" name="phone" placeholder="+123 456 7890" className="w-full p-3 border rounded-md" onChange={handlechange} value={phone} />
             </div>
           </form>
 
           <div className="mt-6 flex justify-center">
             <button 
               onClick={handlebutton} 
-              className="bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 px-8 rounded-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-opacity-50"
+              disabled={loading}
+              className={`bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 px-8 rounded-md transition transform hover:scale-105 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
-              Check Availability
+              {loading ? "Checking Availability..." : "Check Availability"}
             </button>
-          </div>
-
-          <div className="mt-6 text-center text-gray-600">
-            <p className="text-sm">* Required fields</p>
-            <p className="text-sm mt-2">Once you check availability, you'll be redirected to our rooms page to complete your booking.</p>
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Booking
+export default Booking;

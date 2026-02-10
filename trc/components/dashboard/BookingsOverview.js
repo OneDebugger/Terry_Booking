@@ -1,25 +1,41 @@
 import React, { useEffect, useState } from "react";
-import { Card, CardContent, Typography, Box } from "@mui/material";
+import { Card, CardContent, Typography, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Chip } from "@mui/material";
 import dynamic from "next/dynamic";
 import BaseCard from "../baseCard/BaseCard";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const BookingsOverview = () => {
   const [bookings, setBookings] = useState({});
+  const [customerDetails, setCustomerDetails] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchBookingsData = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getbookingsdata`);
-        const data = await response.json();
-        console.log("API Response:", data);
-        setBookings(data);
+        setLoading(true);
+        
+        // Fetch bookings data for the chart
+        const bookingsResponse = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getbookingsdata`);
+        const bookingsData = await bookingsResponse.json();
+        console.log("Bookings API Response:", bookingsData);
+        setBookings(bookingsData);
+
+        // Fetch customer details for the table
+        const customerResponse = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/getcustomerdetails`);
+        const customerData = await customerResponse.json();
+        console.log("Customer API Response:", customerData);
+        
+        if (customerData.success) {
+          setCustomerDetails(customerData.data);
+        }
       } catch (error) {
-        console.error("Error fetching bookings data:", error);
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchBookingsData();
+    fetchData();
   }, []);
 
   const optionsBookingsOverview = {
@@ -198,34 +214,136 @@ const BookingsOverview = () => {
 
   return (
     <BaseCard title="Room Bookings Overview">
-      {Object.keys(bookings).length > 0 && hasValidData ? (
-        <Chart 
-          options={optionsBookingsOverview} 
-          series={seriesBookingsOverview} 
-          type="bar" 
-          height="295px" 
-        />
-      ) : (
-        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '295px', textAlign: 'center' }}>
-          {Object.keys(bookings).length > 0 && allDataAreZero ? (
-            <>
-              <Typography variant="h6" color="text.secondary" gutterBottom>
-                No Bookings Found
-              </Typography>
+      {/* Bookings Chart */}
+      <Box sx={{ mb: 4 }}>
+        {Object.keys(bookings).length > 0 && hasValidData ? (
+          <Chart 
+            options={optionsBookingsOverview} 
+            series={seriesBookingsOverview} 
+            type="bar" 
+            height="295px" 
+          />
+        ) : (
+          <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '295px', textAlign: 'center' }}>
+            {Object.keys(bookings).length > 0 && allDataAreZero ? (
+              <>
+                <Typography variant="h6" color="text.secondary" gutterBottom>
+                  No Bookings Found
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  There are no room bookings for the current year yet.
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                  Bookings will appear here once reservations are made.
+                </Typography>
+              </>
+            ) : (
               <Typography variant="body2" color="text.secondary">
-                There are no room bookings for the current year yet.
+                Loading booking data...
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                Bookings will appear here once reservations are made.
-              </Typography>
-            </>
-          ) : (
-            <Typography variant="body2" color="text.secondary">
-              Loading booking data...
-            </Typography>
-          )}
-        </Box>
-      )}
+            )}
+          </Box>
+        )}
+      </Box>
+
+      {/* Customer Details Table */}
+      <Box>
+        <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
+          Recent Customer Bookings
+        </Typography>
+        {loading ? (
+          <Typography variant="body2" color="text.secondary">
+            Loading customer details...
+          </Typography>
+        ) : customerDetails.length > 0 ? (
+          <TableContainer component={Paper} sx={{ maxHeight: 400 }}>
+            <Table stickyHeader aria-label="customer details table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Booking ID</TableCell>
+                  <TableCell>Guest Name</TableCell>
+                  <TableCell>Email</TableCell>
+                  <TableCell>Phone</TableCell>
+                  <TableCell>Room</TableCell>
+                  <TableCell>Room Class</TableCell>
+                  <TableCell>Check-in Date</TableCell>
+                  <TableCell>Check-out Date</TableCell>
+                  <TableCell>Duration</TableCell>
+                  <TableCell>Status</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {customerDetails.map((customer) => (
+                  <TableRow key={customer.id} hover>
+                    <TableCell>
+                      <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+                        {customer.bookingId}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2">
+                        {customer.guestName}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2" sx={{ fontFamily: 'monospace', fontSize: '0.875rem' }}>
+                        {customer.guestEmail}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2" sx={{ fontFamily: 'monospace', fontSize: '0.875rem' }}>
+                        {customer.guestPhone}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2">
+                        {customer.roomNumber} {customer.roomName && `(${customer.roomName})`}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2">
+                        {customer.roomClass}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2">
+                        {new Date(customer.checkinDate).toLocaleDateString()}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2">
+                        {new Date(customer.checkoutDate).toLocaleDateString()}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2" color="text.secondary">
+                        {customer.duration} night(s)
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Chip 
+                        label={customer.bookingStatus} 
+                        size="small"
+                        color={
+                          customer.bookingStatus === 'confirmed' ? 'success' :
+                          customer.bookingStatus === 'checked-in' ? 'primary' :
+                          customer.bookingStatus === 'checked-out' ? 'default' :
+                          customer.bookingStatus === 'cancelled' ? 'error' : 'warning'
+                        }
+                        variant="outlined"
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        ) : (
+          <Typography variant="body2" color="text.secondary">
+            No customer bookings found.
+          </Typography>
+        )}
+      </Box>
     </BaseCard>
   );
 };

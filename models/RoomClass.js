@@ -37,9 +37,6 @@ const RoomClassSchema = new mongoose.Schema({
         alt: { type: String }
     }],
     
-    // Inventory management
-    totalInventory: { type: Number, required: true, min: 1 },
-    activeRooms: { type: Number, default: 0 }, // Number of physical rooms created
     
     // Booking rules
     minStay: { type: Number, default: 1 }, // Minimum nights required
@@ -84,18 +81,18 @@ RoomClassSchema.statics.getAvailableRooms = async function(classId, checkIn, che
 
 // Static method to get occupied room IDs for a date range
 RoomClassSchema.statics.getOccupiedRoomIds = async function(checkIn, checkOut) {
-    const Order = mongoose.model('Order');
+    const Booking = mongoose.model('Booking');
     
-    const occupiedOrders = await Order.find({
+    const occupiedBookings = await Booking.find({
         $and: [
-            { checkin: { $lt: checkOut } },
-            { checkout: { $gt: checkIn } },
-            { deliveryStatus: { $in: ['pending', 'confirmed', 'room allocated'] } }
+            { checkinDate: { $lt: checkOut } },
+            { checkoutDate: { $gt: checkIn } },
+            { bookingStatus: { $in: ['confirmed', 'checked-in'] } }
         ]
-    }).select('room_no');
+    }).select('roomInstanceId');
     
-    return occupiedOrders.map(order => order.room_no).filter(Boolean);
+    return occupiedBookings.map(booking => booking.roomInstanceId).filter(Boolean);
 };
 
 mongoose.models = {};
-module.exports = mongoose.model('RoomClass', RoomClassSchema);
+module.exports = mongoose.model('RoomClass', RoomClassSchema, 'roomclasses');
