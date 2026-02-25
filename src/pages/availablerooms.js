@@ -165,22 +165,41 @@ const AvailableRooms = () => {
       return;
     }
 
-      // Prepare booking data
-      const bookingData = {
-        roomClassId: bookingDetails.roomClassId,
-        checkinDate: bookingDetails.checkin,
-        checkoutDate: bookingDetails.checkout,
-        guestName: bookingDetails.name || 'Guest',
-        guestEmail: bookingDetails.email,
-        guestPhone: bookingDetails.phone,
-        adults: bookingDetails.adults,
-        children: bookingDetails.children,
-        paymentMethod: 'cash',
-        deposit: 0,
-        notes: '',
-        specialRequests: '',
-        roomIds: Object.keys(selectedRooms) // This sends the specific room instances
-      };
+    // Prepare booking data
+    const selectedRoomIds = Object.keys(selectedRooms);
+    const bookingData = {
+      roomClassId: bookingDetails.roomClassId,
+      checkinDate: bookingDetails.checkin,
+      checkoutDate: bookingDetails.checkout,
+      guestName: bookingDetails.name || 'Guest',
+      guestEmail: bookingDetails.email,
+      guestPhone: bookingDetails.phone,
+      adults: bookingDetails.adults,
+      children: bookingDetails.children,
+      paymentMethod: 'cash',
+      deposit: 0,
+      notes: '',
+      specialRequests: '',
+      roomIds: selectedRoomIds // This sends the specific room instances
+    };
+
+    // Log the rooms being booked to the console
+    console.log('🏠 BOOKING ROOMS TO DATABASE:', {
+      totalSelectedRooms: totalSelected,
+      selectedRoomIds: selectedRoomIds,
+      bookingData: bookingData,
+      roomDetails: availableRooms.map(room => ({
+        roomClassId: room._id,
+        roomClassName: room.title,
+        selectedInstances: room.availableInstances.filter(instance => 
+          selectedRoomIds.includes(instance._id || instance.id || instance.roomNumber)
+        ).map(instance => ({
+          instanceId: instance._id || instance.id || instance.roomNumber,
+          roomNumber: instance.roomNumber,
+          price: instance.customPrice || room.price
+        }))
+      }))
+    });
 
     try {
       setLoading(true);
@@ -193,6 +212,13 @@ const AvailableRooms = () => {
       });
 
       const result = await response.json();
+
+      console.log('📊 BOOKING RESPONSE:', {
+        success: result.success,
+        bookingId: result.bookingId,
+        message: result.message,
+        error: result.error
+      });
 
       if (response.ok && result.success) {
         toast.success('Booking confirmed! Your reservation has been created.', {
@@ -212,7 +238,7 @@ const AvailableRooms = () => {
         toast.error(result.error || 'Failed to create booking. Please try again.');
       }
     } catch (error) {
-      console.error('Error creating booking:', error);
+      console.error('❌ ERROR CREATING BOOKING:', error);
       toast.error('Network error. Please try again.');
     } finally {
       setLoading(false);

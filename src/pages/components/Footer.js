@@ -1,70 +1,57 @@
 import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import {BsFacebook,BsInstagram,BsTwitter,BsYoutube,BsFillTelephoneFill} from "react-icons/bs";
-import {MdEmail} from "react-icons/md";
+
 const Footer = () => {
   return (
-    <div className=''>
-      <footer className="footer">
-  	 <div className="container">
-  	 	<div className="row">
-  	 		<div className="footer-col">
-  	 			<h4>Hotel Cresent</h4>
-  	 			<ul>
-  	 				<p className='text-white'>Address:-H.No Plot Bearing No 37 Prestige Country block No 22 of Rallaguda Village Shamshabad Hyderabad 501218</p>
-  	 				<li className='flex flex-row items-center text-amber-500 my-2'><a className=''><BsFillTelephoneFill className='text-amber-500'/></a><p className='mx-2'>+2633712345678
-             </p> </li>
-  	 				<li className='flex flex-row items-center text-amber-500 my-2'><a className=''><MdEmail className='text-amber-500'/></a><p className='mx-2'>hoteldcrescent@gmail.com
-             </p> </li>
-  	 				<li className='flex flex-row items-center text-amber-500 my-2'><a className=''><Image src={'/web.svg'} className='bg-amber-500' height={20} width={20} alt='webimg'/></a><p className='mx-2'>www.hoteldcrescent.com
-             </p> </li>
-  	 			</ul>
-  	 		</div>
-  	 		<div className="footer-col">
-  	 			<h4>Get help</h4>
-  	 			<ul>
-  	 				<li><Link href={"#Faq"}>FAQ</Link></li>
-  	 				<li><Link href={"/orders"}>Booking status</Link></li>
-  	 				<li><Link href={"/rooms"}>Services</Link></li>
-  	 				<li><Link href={"/orders"}>order status</Link></li>
-  	 				<li><Link href="/admin/adminlogin">Admin Login</Link></li>
-  	 			</ul>
-  	 		</div>
-  	 		<div className="footer-col">
-  	 			<h4>Online shop</h4>
-  	 			<ul>
-  	 				<li><Link href={"/foods"}>Foods</Link></li>
-  	 				<li><Link href={"/booking"}>Book a room</Link></li>
-  	 			</ul>
-  	 		</div>
-  	 		<div className="footer-col">
-  	 			<h4>Follow us</h4>
-  	 			<div className="social-links">
-  	 				<Link href="#"><BsFacebook className='text-4xl hover:text-blue-600  '/></Link>
-  	 				<a href="https://instagram.com/hoteld_crescent_mailardevpally?igshid=YmM0MjE2YWMzOA==" target='_blank'><BsInstagram className='text-4xl hover:text-pink-600'/></a>
-  	 				<a href="#"><BsTwitter className='text-4xl hover:text-blue-600'/></a>
-  	 				<a href="#"><BsYoutube className='text-4xl hover:text-red-600'/></a>
-  	 			</div>
-          <a href='https://wa.me/2633712345678?text=I%20need%20some%20help' target='_blank'><Image src={'/wp.png'} alt='img' height={300} width={300}/></a>
-  	 		</div>
-  	 	</div>
-  	 </div>
-	   <div className="bg-amber-500 text-white">
-    <div className="container mx-auto py-4 px-5 flex flex-wrap flex-col sm:flex-row">
-      <p className="text-white text-sm text-center">© 2024 www.hoteldcrescent.com — All Rights Reserved
-      </p>
-    </div>
-  </div> 
-  </footer>
- 
-    </div>
-  )
-}
+    <footer className="bg-gray-900 text-white py-32 border-t border-white/5">
+      <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-20 mb-24">
+        <div className="space-y-8">
+          <h3 className="text-3xl font-serif font-bold text-white tracking-tighter">Hotel DCrescent</h3>
+          <p className="text-white/40 text-base leading-relaxed font-light">
+            A luxury lodge offering an unparalleled connection to the African wilderness. Established 1994.
+          </p>
+        </div>
+        <div className="space-y-6">
+          <h4 className="text-white font-serif text-xl">Quick Links</h4>
+          <ul className="text-white/30 text-sm space-y-4 font-medium uppercase tracking-widest">
+            <li><a href="#" className="hover:text-[#5a3a2a] transition-colors">Our Story</a></li>
+            <li><a href="#" className="hover:text-[#5a3a2a] transition-colors">Accommodations</a></li>
+            <li><a href="#" className="hover:text-[#5a3a2a] transition-colors">Dining</a></li>
+            <li><a href="#" className="hover:text-[#5a3a2a] transition-colors">Conservation</a></li>
+          </ul>
+        </div>
+        <div className="space-y-6">
+          <h4 className="text-white font-serif text-xl">Contact</h4>
+          <div className="space-y-4 text-white/40 text-sm font-light">
+            <p className="leading-relaxed">123 Luxury Lane, Premium District, City</p>
+            <p>reservations@hoteldcrescent.com</p>
+            <p>+1 (555) 123-4567</p>
+          </div>
+        </div>
+        <div className="space-y-8">
+          <h4 className="text-white font-serif text-xl">Newsletter</h4>
+          <p className="text-white/30 text-sm font-light">Subscribe for exclusive offers and stories from the wild.</p>
+          <div className="flex flex-col gap-3">
+            <input 
+              placeholder="Email Address" 
+              className="bg-white/5 border border-white/10 rounded-lg px-5 py-4 text-sm w-full focus:outline-none focus:border-[#5a3a2a] transition-all text-white placeholder-white/50" 
+            />
+            <button className="bg-[#5a3a2a] text-white py-4 rounded-lg text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-[#5a3a2a]/90 transition-all shadow-lg shadow-[#5a3a2a]/20">
+              Subscribe
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8 border-t border-white/5 pt-12">
+        <p className="text-[10px] uppercase tracking-widest text-white/20 font-bold">&copy; 2026 Hotel DCrescent. All rights reserved.</p>
+        <div className="flex gap-10 text-[10px] uppercase tracking-widest text-white/20 font-bold">
+          <a href="#" className="hover:text-white transition-colors">Privacy</a>
+          <a href="#" className="hover:text-white transition-colors">Terms</a>
+          <a href="#" className="hover:text-white transition-colors">Cookies</a>
+        </div>
+      </div>
+    </footer>
+  );
+};
 
-export default Footer
-
-
-
-
-
+export default Footer;

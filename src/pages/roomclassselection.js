@@ -202,11 +202,11 @@ const RoomClassSelection = () => {
               </div>
               <div>
                 <span className="font-semibold">Adults:</span>
-                <p className="text-sm">{bookingDetails.adults}</p>
+                <p className="text-sm">{typeof bookingDetails.adults === 'object' ? JSON.stringify(bookingDetails.adults) : bookingDetails.adults}</p>
               </div>
               <div>
                 <span className="font-semibold">Children:</span>
-                <p className="text-sm">{bookingDetails.children}</p>
+                <p className="text-sm">{typeof bookingDetails.children === 'object' ? JSON.stringify(bookingDetails.children) : bookingDetails.children}</p>
               </div>
               <div>
                 <span className="font-semibold">Rooms:</span>

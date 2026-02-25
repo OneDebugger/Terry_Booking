@@ -20,7 +20,8 @@ const handler = async (req, res) => {
         paymentMethod = 'cash',
         deposit = 0,
         notes = '',
-        specialRequests = ''
+        specialRequests = '',
+        roomIds = []  // Accept the selected room IDs from frontend
       } = req.body;
 
       console.log('🏨 Creating new booking:', {
@@ -135,8 +136,34 @@ const handler = async (req, res) => {
         });
       }
 
-      // Use the first available room
-      const selectedRoom = availableRooms[0];
+      // Determine which room to use
+      let selectedRoom;
+      
+      // If user selected a specific room, use it
+      if (roomIds && roomIds.length > 0) {
+        const userSelectedRoomId = roomIds[0]; // Get the first selected room
+        console.log('🎯 User selected room ID:', userSelectedRoomId);
+        
+        // Find the selected room in available rooms
+        selectedRoom = availableRooms.find(room => room._id.toString() === userSelectedRoomId);
+        
+        if (!selectedRoom) {
+          return res.status(400).json({ 
+            success: false, 
+            error: "Selected room is not available for the specified dates. Please select a different room or dates.",
+            availableRooms: availableRooms.map(room => ({
+              id: room._id,
+              roomNumber: room.roomNumber
+            }))
+          });
+        }
+        
+        console.log('✅ Using user-selected room:', selectedRoom.roomNumber);
+      } else {
+        // Fallback to first available room if no specific selection
+        selectedRoom = availableRooms[0];
+        console.log('⚠️ No specific room selected, using first available room:', selectedRoom.roomNumber);
+      }
 
       // Create new booking
       const booking = new Booking({
